@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'it.unicam'
+version '1.0.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile fileTree(include: ['*.jar', '*.so', '*.jnilib'], dir: 'libs')
+
+    compile 'org.json:json:20171018'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.61'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+}
