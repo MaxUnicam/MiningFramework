@@ -5,7 +5,9 @@ This project allow to execute an automatic analysis of the Ethereum transactions
 ## Run
 
 Clone the repository with the command: git clone https://github.com/MaxUnicam/MiningFramework.git.
-Import the project with an IDE (Intellj Idea or Eclipse) as a gradle project.
+Open the project with an IDE (tested only with Intellj Idea). After that we need to manually add a dependency:
+File > Project Structure > Modules > main > open the dependencies tab on the righ > + > JARs or directories > choose the file lib/LpSolve_mac/lpsolve55j.jar.
+And now the project is ready to be executed clicking on the run button on the toolbar.
 
 ## Configuration
 
