@@ -8,27 +8,39 @@ import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
+import org.processmining.dataawarecnetminer.converter.CausalNetToPetrinet;
+import org.processmining.dataawarecnetminer.exception.MiningException;
+import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalGraphMiner;
+import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalNetMiner;
+import org.processmining.dataawarecnetminer.model.DependencyAwareCausalGraph;
+import org.processmining.dataawarecnetminer.model.FrequencyAwareCausalNet;
+import org.processmining.datapetrinets.DataPetriNet;
 import org.processmining.log.csv.CSVFile;
 import org.processmining.log.csv.CSVFileReferenceOpenCSVImpl;
 import org.processmining.log.csv.config.CSVConfig;
 import org.processmining.log.csvimport.CSVConversion;
 import org.processmining.log.csvimport.config.CSVConversionConfig;
+import org.processmining.models.cnet.CausalNet;
 import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
-import org.processmining.models.heuristics.HeuristicsNet;
+import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetImpl;
 import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMf;
 import org.processmining.plugins.InductiveMiner.plugins.IM;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
-import org.processmining.plugins.heuristicsnet.miner.heuristics.converter.HeuristicsNetToPetriNetConverter;
-import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.HeuristicsMiner;
-import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.settings.HeuristicsMinerSettings;
+import org.processmining.plugins.etm.model.narytree.NAryTree;
+import org.processmining.plugins.etm.model.narytree.TreeUtils;
+import org.processmining.plugins.etm.parameters.ETMParam;
+import org.processmining.plugins.etm.parameters.ETMParamFactory;
+import org.processmining.plugins.etm.ui.plugins.ETMwithoutGUI;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGen;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes;
+import org.processmining.processtree.ProcessTree;
+import org.processmining.processtree.conversion.ProcessTree2Petrinet;
 import utils.DiscoveryAlgorithm;
 import utils.FakeProMContext;
 
@@ -58,27 +70,21 @@ public class ProMWrapper {
     }
 
 
-    public PetriNet mine(XLog log, DiscoveryAlgorithm algorithm) {
-        try {
-            FakeProMContext context = new FakeProMContext();
-
-            if (algorithm == DiscoveryAlgorithm.HeuristicMiner) {
-                HeuristicsMinerSettings settings = new HeuristicsMinerSettings();
-                settings.setClassifier(new XEventNameClassifier());
-                HeuristicsMiner miner = new HeuristicsMiner(context, log, settings);
-                HeuristicsNet hNet = miner.mine();
-                Object[] res = HeuristicsNetToPetriNetConverter.converter(context, hNet);
-                return new PetriNet(res);
-//                Petrinet petrinet = (PetrinetImpl)res[0];
-            } else {
-                Object[] net = IM.minePetriNet(context, log, new MiningParametersIMf());
-//                PetrinetImpl a = (PetrinetImpl)net[0];
-                return new PetriNet(net);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public PetriNet mine(XLog log, DiscoveryAlgorithm algorithm) throws Exception {
+        PetriNet petriNet = null;
+        switch (algorithm) {
+            case HeuristicMiner:
+                petriNet = mineUsingHeuristicMiner(log);
+                break;
+            case InductiveMiner:
+                petriNet = mineUsingInductiveMiner(log);
+                break;
+            case EvolutionaryTreeMiner:
+                petriNet = mineUsingETM(log);
+                break;
         }
+
+        return petriNet;
     }
 
     public QualityMeasure getQualityMeasure(XLog log, PetriNet petriNet) {
@@ -116,6 +122,37 @@ public class ProMWrapper {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private PetriNet mineUsingInductiveMiner(XLog log) {
+        Object[] net = IM.minePetriNet(new FakeProMContext(), log, new MiningParametersIMf());
+        PetrinetImpl a = (PetrinetImpl) net[0];
+        return new PetriNet(net);
+    }
+
+    private PetriNet mineUsingHeuristicMiner(XLog log) throws MiningException {
+        HeuristicsCausalGraphMiner gminer = new HeuristicsCausalGraphMiner(log, new XEventNameClassifier());
+        DependencyAwareCausalGraph w = gminer.mineCausalGraph();
+        HeuristicsCausalNetMiner miner = new HeuristicsCausalNetMiner(log, new XEventNameClassifier());
+        FrequencyAwareCausalNet net = miner.mineCausalNet(w);
+        CausalNet result = net.getCNet();
+        CausalNetToPetrinet conv = new CausalNetToPetrinet();
+        DataPetriNet.PetrinetWithMarkings e = conv.convert(result);
+        return new PetriNet(e);
+    }
+
+    private PetriNet mineUsingETM(XLog log) throws Exception {
+        FakeProMContext context = new FakeProMContext();
+        ETMParam param = ETMParamFactory.buildStandardParam(log, null);
+        param.getCentralRegistry().getRandom().setSeed(1);
+        NAryTree[] trees = new NAryTree[] { TreeUtils.fromString("LEAF: tau") };
+        param.setSeed(trees);
+        param.addTerminationConditionMaxDuration(1000 * 60 * 1);
+        param.setLogModulo(1);
+        ProcessTree tree = ETMwithoutGUI.minePTWithParameters(context, log, MiningParameters.getDefaultClassifier(), param);
+        ProcessTree2Petrinet con = new ProcessTree2Petrinet();
+        Object[] net = con.convert(context, tree);
+        return new PetriNet(net);
     }
 
     private static Map<Transition, Integer> constructMOSCostFunction(PetrinetGraph net) {

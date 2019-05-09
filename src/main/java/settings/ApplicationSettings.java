@@ -1,6 +1,6 @@
 package settings;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +14,7 @@ public class ApplicationSettings {
     private boolean initialized = false;
 
 
-    public String contractsIndexFileUrl;
+    public String contractIndexUri;
 
     public String etherscanApiKey;
 
@@ -49,16 +49,17 @@ public class ApplicationSettings {
         String settingsFileUri = (resource != null) ? resource.getFile() : "";
 
         byte[] data = getFileData(settingsFileUri);
-        String fileContent = normalizeFileContent(new String(data));
-        JSONObject obj = new JSONObject(fileContent);
-        contractsIndexFileUrl = obj.getString("ContractIndexUri");
-        etherscanApiKey = obj.getString("EtherscanApiKey");
-        outputLocation = obj.getString("OutputLocation");
+        String fileContent = new String(data);
 
-        JSONObject thresholds = obj.getJSONObject("Thresholds");
-        minimumMethodNumber = thresholds.getInt("MinimumMethodNumber");
-        minimumTransactionNumber = thresholds.getInt("MinimumTransactionNumber");
-        minimumActiveUsersNumber = thresholds.getInt("MinimumActiveUsersNumber");
+        Gson gson = new Gson();
+        ApplicationSettings temporary = gson.fromJson(fileContent, ApplicationSettings.class);
+
+        this.etherscanApiKey = temporary.etherscanApiKey;
+        this.contractIndexUri = temporary.contractIndexUri;
+        this.outputLocation = temporary.outputLocation;
+        this.minimumActiveUsersNumber = temporary.minimumActiveUsersNumber;
+        this.minimumTransactionNumber = temporary.minimumTransactionNumber;
+        this.minimumMethodNumber = temporary.minimumMethodNumber;
     }
 
     private byte[] getFileData(String uri) {
@@ -73,13 +74,6 @@ public class ApplicationSettings {
             e.printStackTrace();
             return new byte[0];
         }
-    }
-
-    private String normalizeFileContent(String content) {
-        return content.replace("\r", "")
-                .replace("\n", "")
-                .replace("\uFEFF", "")
-                .trim();
     }
 
 }

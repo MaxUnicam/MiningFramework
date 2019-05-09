@@ -8,16 +8,18 @@ import services.interfaces.IResultHandler;
 import settings.ApplicationSettings;
 import utils.DiscoveryAlgorithm;
 
+
 public class Program {
 
-    public static void main(String [] args) {
+    public static void main(String [] args) throws Exception {
+
         System.out.println("Application start");
         ApplicationSettings settings = ApplicationSettings.instance();
         settings.initialize();
         System.out.println("Application settings initialized");
         IResultHandler resultHandler = new ResultsHandler();
         ProMWrapper prom = new ProMWrapper();
-        LogBuilder logBuilder = new LogBuilder(settings.contractsIndexFileUrl);
+        LogBuilder logBuilder = new LogBuilder(settings.contractIndexUri);
         System.out.println("Log builder created");
 
         if (logBuilder.contractHashes != null) {
@@ -36,6 +38,8 @@ public class Program {
                     System.out.println("Xes log generated");
 
 //                    PetriNet heuristicNet = prom.mine(log, DiscoveryAlgorithm.HeuristicMiner);
+//                    resultHandler.savePetrinet(heuristicNet, "tmp");
+//                    resultHandler.saveLog(log, "tmp");
 //                    System.out.println("Model discovered with heuristic miner");
 //                    QualityMeasure heuristicMeasure = prom.getQualityMeasure(log, heuristicNet);
 //                    if (heuristicMeasure != null) {

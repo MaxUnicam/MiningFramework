@@ -1,11 +1,11 @@
 package services;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import models.MethodABI;
 import models.Transaction;
 import okhttp3.*;
-import services.interfaces.IJsonParser;
 import settings.ApplicationSettings;
-import utils.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,18 +13,24 @@ import java.util.List;
 
 class EtherscanStub {
 
+    private class EhterscanResult<T> {
+        String status;
+        String message;
+        T result;
+    }
+
     private String apiKey;
 
     private OkHttpClient httpClient;
 
-    private IJsonParser jsonParser;
+    private Gson gson;
 
 
     EtherscanStub() {
         ApplicationSettings settings = ApplicationSettings.instance();
         apiKey = settings.etherscanApiKey;
         httpClient = new OkHttpClient();
-        jsonParser = new JsonParser();
+        gson = new Gson();
     }
 
 
@@ -46,8 +52,10 @@ class EtherscanStub {
             throw new IOException("Empty response body");
         }
 
-        String normalizedJson = StringUtils.normalizeJson(response.body().string());
-        return jsonParser.parseTransactions(normalizedJson);
+        String body = response.body().string();
+        EtherscanStub.EhterscanResult<List<Transaction>> result =
+                gson.fromJson(body, new TypeToken<EtherscanStub.EhterscanResult<List<Transaction>>>(){}.getType());
+        return result.result;
     }
 
 
@@ -69,8 +77,10 @@ class EtherscanStub {
             throw new IOException("Empty response body");
         }
 
-        String normalizedJson = StringUtils.normalizeJson(response.body().string());
-        return jsonParser.parseMethodABI(normalizedJson);
+        String body = response.body().string();
+        EtherscanStub.EhterscanResult<String> result =
+                gson.fromJson(body, new TypeToken<EtherscanStub.EhterscanResult<String>>(){}.getType());
+        return gson.fromJson(result.result, new TypeToken<List<MethodABI>>(){}.getType());
     }
 
 }

@@ -4,6 +4,8 @@ public enum DiscoveryAlgorithm {
 
     HeuristicMiner,
 
-    InductiveMiner
+    InductiveMiner,
+
+    EvolutionaryTreeMiner
 
 }

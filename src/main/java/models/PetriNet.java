@@ -1,5 +1,6 @@
 package models;
 
+import org.processmining.datapetrinets.DataPetriNet;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.impl.PetrinetImpl;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -15,6 +16,12 @@ public class PetriNet {
 
     public PetriNet(Object[] data) {
         initFromObjects(data);
+    }
+
+    public PetriNet(DataPetriNet.PetrinetWithMarkings pn) {
+        this.net = pn.getNet();
+        this.initialMarking = pn.getInitialMarking();
+        this.finalMarking = (pn.getFinalMarkings().length > 0) ? pn.getFinalMarkings()[0] : null;
     }
 
 

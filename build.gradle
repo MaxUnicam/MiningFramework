@@ -16,7 +16,7 @@ dependencies {
 
     compile fileTree(include: ['*.jar', '*.so', '*.jnilib'], dir: 'libs')
 
-    compile 'org.json:json:20171018'
-    compile 'org.bouncycastle:bcprov-jdk15on:1.61'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.61'
     implementation 'com.squareup.okhttp3:okhttp:3.14.0'
 }

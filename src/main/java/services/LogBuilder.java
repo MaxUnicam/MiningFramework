@@ -1,9 +1,10 @@
 package services;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import models.AnalysisItem;
 import models.MethodABI;
 import models.Transaction;
-import org.json.JSONArray;
 import services.interfaces.ILogAnalyzer;
 import services.interfaces.ILogBuilder;
 import settings.ApplicationSettings;
@@ -36,12 +37,16 @@ public class LogBuilder implements ILogBuilder {
         temporaryDirPath = ApplicationSettings.instance().outputLocation + "tmp/";
         new File(temporaryDirPath).mkdirs();
         byte[] data = getFileData(contractsIndexFileUri);
-        String content = StringUtils.normalizeJson(new String(data));
-        parseContractHashes(content);
+        String content = new String(data);
+        Gson gson = new Gson();
+        contractHashes = gson.fromJson(content, new TypeToken<List<String>>(){}.getType());
     }
 
 
     public String build(String contract) {
+        if (StringUtils.isNullOrEmpty(contract))
+            return "";
+
         try {
             System.out.println(contract + "'s transactions download start");
             List<Transaction> transactions = etherscan.getContractTransactions(contract);
@@ -82,17 +87,6 @@ public class LogBuilder implements ILogBuilder {
         } catch (IOException e) {
             e.printStackTrace();
             return new byte[0];
-        }
-    }
-
-    private void parseContractHashes(String content) {
-        try {
-            JSONArray array = new JSONArray(content);
-            for (Object item : array) {
-                contractHashes.add((String) item);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
