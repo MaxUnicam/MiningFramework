@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(":common")
+}
+
+//mainClassName = 'net.petrikainulainen.gradle.client.HelloWorld'

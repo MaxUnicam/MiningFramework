@@ -1,22 +1,21 @@
-plugins {
-    id 'java'
-}
-
 group 'it.unicam'
 version '1.0.0'
 
-sourceCompatibility = 1.8
+allprojects {
 
-repositories {
-    mavenCentral()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+subprojects {
+    apply plugin: "java"
 
-    compile fileTree(include: ['*.jar', '*.so', '*.jnilib'], dir: 'libs')
+    sourceCompatibility = 1.8
 
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.61'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation fileTree(include: ['*.jar', '*.so', '*.jnilib'], dir: 'libs')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
 }

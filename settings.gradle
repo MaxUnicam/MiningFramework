@@ -1,2 +1,3 @@
 rootProject.name = 'miningframework'
 
+include ":api", ":common", ":deamon"
