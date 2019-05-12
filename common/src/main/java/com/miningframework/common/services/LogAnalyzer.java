@@ -63,10 +63,9 @@ public class LogAnalyzer implements ILogAnalyzer {
             return false;
         }
 
-        //TODO: Controllare
-//        if (activeCallers < 2) {
-//            return false;
-//        }
+        if (activeCallers < 2) {
+            return false;
+        }
 
         return true;
     }

@@ -11,7 +11,6 @@ import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.dataawarecnetminer.converter.CausalNetToPetrinet;
-import org.processmining.dataawarecnetminer.exception.MiningException;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalGraphMiner;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalNetMiner;
 import org.processmining.dataawarecnetminer.model.DependencyAwareCausalGraph;
@@ -44,6 +43,8 @@ import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes
 import org.processmining.processtree.ProcessTree;
 import org.processmining.processtree.conversion.ProcessTree2Petrinet;
 
+import org.processmining.datapetrinets.exception.NonExistingVariableException;
+
 import java.io.File;
 import java.util.*;
 
@@ -63,6 +64,7 @@ public class ProMWrapper {
             conversionConfig.setCompletionTimeColumn("timestamp");
             CSVConversion conversion = new CSVConversion();
             CSVConversion.ConversionResult<XLog> result = conversion.doConvertCSVToXES(csvFile, importConfig, conversionConfig);
+            csv.delete();
             return result.getResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +133,7 @@ public class ProMWrapper {
         return new PetriNet(net);
     }
 
-    private PetriNet mineUsingHeuristicMiner(XLog log) throws MiningException {
+    private PetriNet mineUsingHeuristicMiner(XLog log) throws Exception, NonExistingVariableException {
         HeuristicsCausalGraphMiner gminer = new HeuristicsCausalGraphMiner(log, new XEventNameClassifier());
         DependencyAwareCausalGraph w = gminer.mineCausalGraph();
         HeuristicsCausalNetMiner miner = new HeuristicsCausalNetMiner(log, new XEventNameClassifier());

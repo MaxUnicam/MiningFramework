@@ -4,6 +4,7 @@ import com.miningframework.common.models.PetriNet;
 import com.miningframework.common.models.QualityMeasure;
 import com.miningframework.common.services.interfaces.IResultHandler;
 import com.miningframework.common.settings.ApplicationSettings;
+import com.miningframework.common.utils.DiscoveryAlgorithm;
 import com.miningframework.common.utils.FakeProMContext;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XesXmlGZIPSerializer;
@@ -35,6 +36,12 @@ public class ResultsHandler implements IResultHandler {
     }
 
     @Override
+    public boolean createMeasuresFile(String contract) {
+        String content = "fitness,precision,generalization,algorithm";
+        return writeFile(outputLocation + contract + "/measures.csv", content);
+    }
+
+    @Override
     public boolean saveLog(XLog log, String contract) {
         try {
             String path = outputLocation + contract + "/log.xes.gz";
@@ -47,9 +54,9 @@ public class ResultsHandler implements IResultHandler {
     }
 
     @Override
-    public boolean savePetrinet(PetriNet net, String contract) {
+    public boolean savePetrinet(PetriNet net, String contract, DiscoveryAlgorithm algorithm) {
         try {
-            String path = outputLocation + contract + "/inductive.pnml";
+            String path = outputLocation + contract + "/" + algorithm.name().toLowerCase() + ".pnml";
             PnmlExportNetToPNML exporter = new PnmlExportNetToPNML();
             File outputFile = new File(path);
             exporter.exportPetriNetToPNMLFile(new FakeProMContext(), net.net, outputFile);
@@ -60,17 +67,16 @@ public class ResultsHandler implements IResultHandler {
     }
 
     @Override
-    public boolean saveMeasures(QualityMeasure measures, String contract) {
+    public boolean saveMeasures(QualityMeasure measures, String contract, DiscoveryAlgorithm algorithm) {
         String path = outputLocation + contract + "/measures.csv";
 
         List<String> data = Arrays.asList(Double.toString(measures.fitness),
                 Double.toString(measures.precision),
-                Double.toString(measures.generalization));
+                Double.toString(measures.generalization),
+                algorithm.name().toLowerCase());
         String dataRow = String.join(",", data);
 
-        String content = "fitness,precision,generalization" + System.lineSeparator() + dataRow;
-        boolean value1 = writeFile(path, content);
-
+        boolean value1 = writeFile(path, System.lineSeparator() + dataRow, true);
         String generalMeasureRow = contract + "," + dataRow;
         boolean value2 = appendToCsvMeasuresFile(generalMeasureRow);
 
@@ -79,7 +85,7 @@ public class ResultsHandler implements IResultHandler {
 
 
     private void createGeneralCsvMeasuresFile() {
-        String content = "contract,fitness,precision,generalization";
+        String content = "contract,fitness,precision,generalization,algorithm";
         writeFile(generalMeasuresCsvFile, content);
     }
 
@@ -106,9 +112,13 @@ public class ResultsHandler implements IResultHandler {
     }
 
     private boolean writeFile(String path, String content) {
+        return writeFile(path, content, false);
+    }
+
+    private boolean writeFile(String path, String content, boolean append) {
         try {
             File file = new File(path);
-            FileWriter fr = new FileWriter(file);
+            FileWriter fr = new FileWriter(file, append);
             fr.write(content);
             fr.close();
             return true;
