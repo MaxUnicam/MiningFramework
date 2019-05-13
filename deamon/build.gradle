@@ -1,5 +1,23 @@
-dependencies {
-    implementation project(":common")
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
 }
 
-//mainClassName = 'net.petrikainulainen.gradle.client.HelloWorld'
+jar {
+    manifest {
+        attributes "Main-Class": "com.miningframework.deamon.DeamonApplication"
+    }
+}
+
+dependencies {
+
+    implementation project(":common")
+
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'

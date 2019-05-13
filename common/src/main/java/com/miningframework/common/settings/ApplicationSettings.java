@@ -2,9 +2,7 @@ package com.miningframework.common.settings;
 
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 public class ApplicationSettings {
@@ -44,13 +42,7 @@ public class ApplicationSettings {
         }
 
         initialized = true;
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resource = classLoader.getResource("settings/appsettings.json");
-        String settingsFileUri = (resource != null) ? resource.getFile() : "";
-
-        byte[] data = getFileData(settingsFileUri);
-        String fileContent = new String(data);
-
+        String fileContent = new String(getFileData());
         Gson gson = new Gson();
         ApplicationSettings temporary = gson.fromJson(fileContent, ApplicationSettings.class);
 
@@ -62,18 +54,44 @@ public class ApplicationSettings {
         this.minimumMethodNumber = temporary.minimumMethodNumber;
     }
 
-    private byte[] getFileData(String uri) {
+    private byte[] getFileData() {
         try {
-            File file = new File(uri);
-            FileInputStream fis = new FileInputStream(file);
-            byte[] data = new byte[(int) file.length()];
-            int size = fis.read(data);
-            fis.close();
-            return data;
+            URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
+            String path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
+            File file = new File(path + "/appsettings.json");
+
+            // Loaded from properties during development and from the same directory of the jar in production
+            InputStream inputStream;
+            if (file.exists())
+                inputStream = new FileInputStream(file);
+            else
+                inputStream = this.getClass().getResourceAsStream("/settings/appsettings.json");
+
+            if (inputStream != null) {
+                byte[] data = toByteArray(inputStream);
+                inputStream.close();
+                return data;
+            }
+
+            System.out.println("Appsettings.json not found");
+            return new byte[0];
         } catch (IOException e) {
             e.printStackTrace();
             return new byte[0];
         }
+    }
+
+    private byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int len;
+
+        while ((len = in.read(buffer)) != -1) {
+            os.write(buffer, 0, len);
+        }
+
+        return os.toByteArray();
     }
 
 }

@@ -10,8 +10,6 @@ import com.miningframework.common.settings.ApplicationSettings;
 import com.miningframework.common.utils.DiscoveryAlgorithm;
 import org.deckfour.xes.model.XLog;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
