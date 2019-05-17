@@ -2,12 +2,19 @@
 
 This project allow to execute an automatic analysis of the Ethereum transactions using process mining techniques. The implementation of process mining algorithms and standard formats are based on ProM classes and libraries.
 
+The overall project is composed by 3 subprojects: 
+  - common, which implements a wrapper around the features of ProM
+  - deamon, which is a batch program that analyze a set of Ethereum contracts using process defined below
+  - api, a web server that exposes an API to execute an analysis on a specified Ethereum contract
+
 ## Run
 
 Clone the repository with the command: git clone https://github.com/MaxUnicam/MiningFramework.git.
-Open the project with an IDE (tested only with Intellj Idea). After that we need to manually add a dependency:
-File > Project Structure > Modules > main > open the dependencies tab on the righ > + > JARs or directories > choose the file lib/LpSolve_mac/lpsolve55j.jar.
-And now the project is ready to be executed clicking on the run button on the toolbar.
+
+For each executable project (only deamon and api are executable, common is only a set of features for the other two projects) there a Intellj IDEA run configuration. So, opening the project with the IDE you can run one of the two projects by clicking the run button.
+
+Alternatively you can launch the executable jar saved under the dir $projectDir/dist/. For example to run the deamon application go to MiningFramework/deamon/dist and execute the command: 
+```java -Djava.library.path=../../common/libs/LpSolve_mac/mac/ -jar deamon.jar```
 
 ## Configuration
 
