@@ -41,6 +41,11 @@ public class LogBuilder {
         contractHashes = gson.fromJson(content, new TypeToken<List<String>>(){}.getType());
     }
 
+    public LogBuilder() {
+        temporaryDirPath = ApplicationSettings.instance().outputLocation + "tmp/";
+        new File(temporaryDirPath).mkdirs();
+    }
+
 
     public String build(String contract) {
         if (StringUtils.isNullOrEmpty(contract))

@@ -40,6 +40,7 @@ import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGen;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes;
+import org.processmining.plugins.pnml.exporting.PnmlExportNetToPNML;
 import org.processmining.processtree.ProcessTree;
 import org.processmining.processtree.conversion.ProcessTree2Petrinet;
 
@@ -124,6 +125,17 @@ public class ProMWrapper {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean serializePetriNet(PetriNet petriNet, String outputFilePath) {
+        try {
+            PnmlExportNetToPNML exporter = new PnmlExportNetToPNML();
+            File outputFile = new File(outputFilePath);
+            exporter.exportPetriNetToPNMLFile(new FakeProMContext(), petriNet.net, outputFile);
+            return outputFile.exists();
+        } catch (Exception e) {
+            return false;
         }
     }
 
