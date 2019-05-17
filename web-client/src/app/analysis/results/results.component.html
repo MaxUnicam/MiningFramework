@@ -1,0 +1,37 @@
+<mat-card>
+
+  <mat-card-header>
+    <mat-card-title>Analysis result</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content style="margin-top: 16px;">
+    <div>
+      Used algorithm: <span class="subtitle">{{result.algorithm}}</span>
+    </div>
+
+    <h3 class="title">Quality measurements</h3>
+    <div class="quality-measure">
+      Fitness: <span class="subtitle">{{result.qualityMeasure.fitness}}</span>
+    </div>
+    <div class="quality-measure">
+      Precision: <span class="subtitle">{{result.qualityMeasure.precision}}</span>
+    </div>
+    <div class="quality-measure">
+      Generalization: <span class="subtitle">{{result.qualityMeasure.generalization}}</span>
+    </div>
+
+    <h3 class="title" *ngIf="result.pnmlContent || result.xesContent">Downloads</h3>
+    <div>
+      <button mat-raised-button color="accent" *ngIf="result.pnmlContent" (click)="dowloadModel()">
+        Download model</button>
+      <button mat-raised-button color="accent" *ngIf="result.xesContent" style="margin-left: 16px;"
+        (click)="dowloadXesFile()">Download log</button>
+    </div>
+
+    <div class="title">
+      <button mat-raised-button (click)="resetAnalysis()">Back to home</button>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>

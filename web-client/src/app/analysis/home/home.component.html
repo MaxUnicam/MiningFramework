@@ -1,0 +1,80 @@
+<mat-card *ngIf="!showResults">
+
+  <mat-card-content>
+
+    <mat-horizontal-stepper [linear]="true" #stepper>
+
+      <mat-step [stepControl]="contractFormControl">
+        <ng-template matStepLabel>Contract to analyse</ng-template>
+
+        <p>Insert the Ethereum contract hash you want to analyze (i.e. 0x8b5d9d156a4a3742ae1dba56434477e31754a056). The
+          contract must belong to the Ethereum main net</p>
+
+        <!-- 0x8b5d9d156a4a3742ae1dba56434477e31754a056 -->
+        <mat-form-field class="example-full-width" class="analysis-form">
+          <input matInput placeholder="Contract" [(ngModel)]="ethereumContractHash" [formControl]="contractFormControl">
+          <mat-error *ngIf="contractFormControl.hasError('required')">
+            Please enter a contract hash
+          </mat-error>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button matStepperNext color="accent"
+            [disabled]="contractFormControl.hasError('required')">Next</button>
+        </div>
+
+      </mat-step>
+
+
+      <mat-step>
+        <ng-template matStepLabel>Fill out your address</ng-template>
+
+        <p>Select the discovery algorithm to use to mine the Petri Net</p>
+
+        <mat-radio-group aria-label="Select an option" [(ngModel)]="algorithm">
+          <mat-radio-button [value]="inductive" class="algorithm-item">Inductive Miner</mat-radio-button>
+          <mat-radio-button [value]="heuristic" class="algorithm-item">Heuristic Miner</mat-radio-button>
+        </mat-radio-group>
+
+        <div class="actions">
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext color="accent" class="right-action">Next</button>
+        </div>
+
+      </mat-step>
+
+
+      <mat-step>
+        <ng-template matStepLabel>Customize results</ng-template>
+
+        <p>Select the components you want as results from the analysis</p>
+
+        <section class="example-section">
+          <mat-checkbox [(ngModel)]="getMeasures" [disabled]="true" class="result-item">Quality measures</mat-checkbox>
+          <mat-checkbox [(ngModel)]="getModel" class="result-item">PNML Model</mat-checkbox>
+          <mat-checkbox [(ngModel)]="getLog" class="result-item">Xes log</mat-checkbox>
+        </section>
+
+        <div class="actions">
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext color="accent" class="right-action" (click)="startAnalysis()">Start
+            analysis</button>
+        </div>
+
+      </mat-step>
+
+    </mat-horizontal-stepper>
+
+  </mat-card-content>
+
+</mat-card>
+
+
+<app-results *ngIf="showResults" [result]="results" (analysisReset)="clearAnalysisResults()"></app-results>
+
+
+<div class="overlay" *ngIf="isAnalyzing">
+  <mat-progress-spinner class="spinner" mode="indeterminate" [strokeWidth]="4">
+  </mat-progress-spinner>
+  <p class="spinner-text">Anaylisis in progress</p>
+</div>
