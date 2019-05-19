@@ -2,7 +2,7 @@
   <configuration default="false" name="Deamon" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.miningframework.deamon.DeamonApplication" />
     <module name="miningframework.deamon.main" />
-    <option name="VM_PARAMETERS" value="-Djava.library.path=common/libs/LpSolve_mac/mac" />
+    <option name="VM_PARAMETERS" value="-Djava.library.path=common/libs/lpsolve/mac" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
