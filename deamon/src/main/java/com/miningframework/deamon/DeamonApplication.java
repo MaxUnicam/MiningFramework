@@ -12,10 +12,12 @@ import org.deckfour.xes.model.XLog;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 
 public class DeamonApplication {
 
-    public static void main(String [] args) throws Exception {
+    public static void main(String [] args) {
 
         System.out.println("Mining framework deamon started");
         ApplicationSettings settings = ApplicationSettings.instance();
@@ -26,45 +28,57 @@ public class DeamonApplication {
         LogBuilder logBuilder = new LogBuilder(settings.contractIndexUri);
         System.out.println("Log builder created");
 
-        if (logBuilder.contractHashes != null) {
+        if (logBuilder.contractHashes == null) {
+            System.out.println("Empty list of contracts");
+            return;
+        }
 
-            final List<DiscoveryAlgorithm> algoritms = Arrays.asList(
-                    DiscoveryAlgorithm.HeuristicMiner,
-                    DiscoveryAlgorithm.InductiveMiner
-            );
+        final List<DiscoveryAlgorithm> algoritms = Arrays.asList(
+                DiscoveryAlgorithm.HeuristicMiner,
+                DiscoveryAlgorithm.InductiveMiner
+        );
 
-            for (String contract : logBuilder.contractHashes) {
-                String filePath = logBuilder.build(contract);
-                System.out.println("Log built correctly: " + (filePath != null) + " from contract " + contract);
+        ExecutionController controller = new ExecutionController(prom);
 
-                if (filePath != null) {
-                    resultHandler.createResultsDir(contract);
+        for (String contract : logBuilder.contractHashes) {
+            String filePath = logBuilder.build(contract);
+            System.out.println("Log built correctly: " + (filePath != null) + " from contract " + contract);
 
-                    XLog log = prom.convertCsvToXes(filePath);
-                    if (log == null)
-                        continue;
+            if (filePath != null) {
+                resultHandler.createResultsDir(contract);
 
-                    resultHandler.saveLog(log, contract);
-                    System.out.println("Xes log generated");
-                    resultHandler.createMeasuresFile(contract);
+                XLog log = prom.convertCsvToXes(filePath);
+                if (log == null)
+                    continue;
 
-                    for (DiscoveryAlgorithm algorithm : algoritms) {
-                        PetriNet petrinet = prom.mine(log, algorithm);
+                resultHandler.saveLog(log, contract);
+                System.out.println("Xes log generated");
+                resultHandler.createMeasuresFile(contract);
+
+                for (DiscoveryAlgorithm algorithm : algoritms) {
+                    try {
+                        PetriNet petrinet = controller.mine(log, algorithm);
                         resultHandler.savePetrinet(petrinet, contract, algorithm);
                         System.out.println("Model discovered with " + algorithm.name());
-                        QualityMeasure measure = prom.getQualityMeasure(log, petrinet);
+                        QualityMeasure measure = controller.getQualityMeasure(log, petrinet);
                         resultHandler.saveMeasures(measure, contract, algorithm);
                         if (measure != null) {
                             System.out.println(algorithm.name() + " model quality measures");
                             System.out.println(measure.toString());
                         }
+                    } catch (Exception e) {
+                        if (e instanceof TimeoutException)
+                            System.out.println("Timeout, skipped");
+                        else
+                            e.printStackTrace();
                     }
-
                 }
-
-                System.out.println("----------------------------------------------------");
             }
+
+            System.out.println("----------------------------------------------------");
         }
+
+        controller.deinitialize();
     }
 
 }
