@@ -14,7 +14,10 @@ Clone the repository with the command: git clone https://github.com/MaxUnicam/Mi
 For each executable project (only deamon and api are executable, common is only a set of features for the other two projects) there a Intellj IDEA run configuration. So, opening the project with the IDE you can run one of the two projects by clicking the run button.
 
 Alternatively you can launch the executable jar saved under the dir $projectDir/dist/. For example to run the deamon application go to MiningFramework/deamon/dist and execute the command: 
-```java -Djava.library.path=../../common/libs/LpSolve_mac/mac/ -jar deamon.jar```
+```java -Djava.library.path=../../common/libs/lpsolve/mac/ -jar deamon.jar```
+
+Based on the platform you are running the application you must specify a different path java.library.path. For example for linux the command is: 
+```java -Djava.library.path=../../common/libs/lpsolve/linux/ -jar deamon.jar```
 
 ## Configuration
 
