@@ -3,6 +3,7 @@ package com.miningframework.deamon;
 import com.miningframework.common.models.PetriNet;
 import com.miningframework.common.models.QualityMeasure;
 import com.miningframework.common.services.ProMWrapper;
+import com.miningframework.common.settings.ApplicationSettings;
 import com.miningframework.common.utils.DiscoveryAlgorithm;
 import org.deckfour.xes.model.XLog;
 
@@ -18,11 +19,12 @@ class ExecutionController {
 
     private ExecutorService executor;
 
-    private long timeoutMinutes = 10;
+    private ApplicationSettings settings;
 
 
-    ExecutionController(ProMWrapper prom) {
+    ExecutionController(ProMWrapper prom, ApplicationSettings settings) {
         this.prom = prom;
+        this.settings = settings;
         this.executor = Executors.newFixedThreadPool(1);
     }
 
@@ -38,7 +40,7 @@ class ExecutionController {
             return this.prom.mine(log, algorithm);
         });
 
-        return future.get(timeoutMinutes, TimeUnit.MINUTES);
+        return future.get(settings.timeoutSeconds, TimeUnit.SECONDS);
     }
 
 
@@ -53,7 +55,7 @@ class ExecutionController {
             return this.prom.getQualityMeasure(log, petriNet);
         });
 
-        return future.get(timeoutMinutes, TimeUnit.MINUTES);
+        return future.get(settings.timeoutSeconds, TimeUnit.SECONDS);
     }
 
 

@@ -24,6 +24,8 @@ public class ApplicationSettings {
 
     public int minimumActiveUsersNumber = 2;
 
+    public int timeoutSeconds = 10 * 60;
+
 
     private ApplicationSettings() { }
 
@@ -52,6 +54,7 @@ public class ApplicationSettings {
         this.minimumActiveUsersNumber = temporary.minimumActiveUsersNumber;
         this.minimumTransactionNumber = temporary.minimumTransactionNumber;
         this.minimumMethodNumber = temporary.minimumMethodNumber;
+        this.timeoutSeconds = temporary.timeoutSeconds;
     }
 
     private byte[] getFileData() {

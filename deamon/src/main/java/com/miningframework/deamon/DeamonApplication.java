@@ -38,7 +38,7 @@ public class DeamonApplication {
                 DiscoveryAlgorithm.InductiveMiner
         );
 
-        ExecutionController controller = new ExecutionController(prom);
+        ExecutionController controller = new ExecutionController(prom, settings);
 
         for (String contract : logBuilder.contractHashes) {
             String filePath = logBuilder.build(contract);

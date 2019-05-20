@@ -11,7 +11,6 @@ import com.miningframework.common.utils.FakeProMContext;
 import com.miningframework.common.utils.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.out.XesXmlGZIPSerializer;
 import org.deckfour.xes.out.XesXmlSerializer;
 import org.processmining.plugins.pnml.exporting.PnmlExportNetToPNML;
 import org.springframework.http.HttpStatus;
@@ -55,9 +54,11 @@ public class ProcessMiningController {
 
         String path = logBuilder.build(contract);
         if (StringUtils.isNullOrEmpty(path)) {
+            String message = "Can't create a log from specified contract";
+            System.out.println(message);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Can't create a log from specified contract");
+                    .body(message);
         }
 
         XLog log = promWrapper.convertCsvToXes(path);

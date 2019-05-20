@@ -1,0 +1,11 @@
+.gradle
+api/out
+api/build
+common/out
+common/build
+deamon/build
+deamon/out
+out
+.idea
+web-client/node_modules
+web-client/.vscode
