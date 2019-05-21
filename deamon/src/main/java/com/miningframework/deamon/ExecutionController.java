@@ -26,6 +26,7 @@ class ExecutionController {
         this.prom = prom;
         this.settings = settings;
         this.executor = Executors.newFixedThreadPool(1);
+        System.out.println("Timeout is " + settings.timeoutMilliseconds + " milliseconds");
     }
 
 
@@ -40,7 +41,7 @@ class ExecutionController {
             return this.prom.mine(log, algorithm);
         });
 
-        return future.get(settings.timeoutSeconds, TimeUnit.SECONDS);
+        return future.get(settings.timeoutMilliseconds, TimeUnit.MILLISECONDS);
     }
 
 
@@ -55,7 +56,7 @@ class ExecutionController {
             return this.prom.getQualityMeasure(log, petriNet);
         });
 
-        return future.get(settings.timeoutSeconds, TimeUnit.SECONDS);
+        return future.get(settings.timeoutMilliseconds, TimeUnit.MILLISECONDS);
     }
 
 
