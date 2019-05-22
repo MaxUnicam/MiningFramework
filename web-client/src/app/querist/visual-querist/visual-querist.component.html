@@ -1,23 +1,21 @@
 <div class="visual-querist-container">
 
     <mat-card class="info-card">
-      <h3>Informazioni</h3>
+      <h3>Infos</h3>
       <mat-radio-group>
-        <mat-radio-button value="Block" (change)="updateSelection('Block')">Blocco</mat-radio-button>
-        <br>
-        <mat-radio-button value="Transaction" (change)="updateSelection('Transaction')">Transizione</mat-radio-button>
-        <br>
-        <mat-radio-button value="Account" (change)="updateSelection('Account')">Account</mat-radio-button>
+        <mat-radio-button value="Block" (change)="updateSelection('Block')" class="radio-button-item">Block</mat-radio-button>
+        <mat-radio-button value="Transaction" (change)="updateSelection('Transaction')" class="radio-button-item">Transaction</mat-radio-button>
+        <mat-radio-button value="Account" (change)="updateSelection('Account')" class="radio-button-item">Account</mat-radio-button>
       </mat-radio-group>
     </mat-card>
 
     <mat-card class="selection-card">
-      <h3>Selezione</h3>
+      <h3>Selection</h3>
 
       <div *ngFor="let constraint of constraints">
 
         <mat-form-field class="field">
-          <mat-select placeholder="Proprietà" [(ngModel)]="constraint.property" [disabled]="dataType == 'Account'">
+          <mat-select placeholder="Property" [(ngModel)]="constraint.property" [disabled]="dataType == 'Account'">
             <mat-option *ngFor="let property of currentProperties" [value]="property">
               {{property}}
             </mat-option>
@@ -25,7 +23,7 @@
         </mat-form-field>
 
         <mat-form-field class="field operator-field">
-          <mat-select placeholder="Operatore" [(ngModel)]="constraint.operator" [disabled]="dataType == 'Account'">
+          <mat-select placeholder="Operator" [(ngModel)]="constraint.operator" [disabled]="dataType == 'Account'">
             <mat-option *ngFor="let operator of operators" [value]="operator">
               {{operator}}
             </mat-option>
@@ -33,7 +31,7 @@
         </mat-form-field>
 
         <mat-form-field class="field">
-          <input matInput placeholder="Valore" [(ngModel)]="constraint.value">
+          <input matInput placeholder="Value" [(ngModel)]="constraint.value">
         </mat-form-field>
 
         <mat-form-field class="field logical-op-field" *ngIf="constraint.logicalOperator != null">
@@ -45,13 +43,13 @@
       </div>
 
       <mat-card-actions>
-        <button mat-button (click)="addConstraint()" [disabled]="currentProperties.length <= 0 || dataType == 'Account'">Aggiungi regola</button>
+        <button mat-button (click)="addConstraint()" [disabled]="currentProperties.length <= 0 || dataType == 'Account'">Add constraint</button>
       </mat-card-actions>
 
     </mat-card>
 
     <mat-card class="projection-card">
-      <h3>Proiezione</h3>
+      <h3>Projection</h3>
       <div *ngFor="let property of currentProperties">
         <mat-checkbox (change)="updateProjection(property)">{{property}}</mat-checkbox>
       </div>

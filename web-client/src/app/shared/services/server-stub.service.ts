@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { SettingsService } from './settings.service';
 import { Observable } from 'rxjs';
 import { AnalysisResult } from '../models/analysisResult';
 import { HttpClient } from '@angular/common/http';
 import { DiscoveryAlgorithm } from '../models/discoveryAlgorithm';
+import { InMemorySettingsService } from 'src/app/settings/memorysettings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class ServerStubService {
 
   private serverEndpoint: string = null;
 
-  constructor(private settings: SettingsService, private httpClient: HttpClient) {
-    this.serverEndpoint = 'http://localhost:8080';
+  constructor(private settings: InMemorySettingsService, private httpClient: HttpClient) {
+    this.serverEndpoint = settings.apiServerUrl;
   }
 
   public analyzeContract(contract: string, algorithm: DiscoveryAlgorithm, returnXes = false, returnPnml = false): Observable<AnalysisResult> {

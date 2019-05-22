@@ -42,3 +42,8 @@ tr {
   color: gray;
   font-size: large;
 }
+
+
+th {
+  text-transform: uppercase;
+}

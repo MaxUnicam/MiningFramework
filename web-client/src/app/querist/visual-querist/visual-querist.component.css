@@ -39,3 +39,8 @@
   bottom: 32px;
   right: 32px;
 }
+
+.radio-button-item {
+  display: block;
+  margin-bottom: 16px;
+}

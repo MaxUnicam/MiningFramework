@@ -1,28 +1,58 @@
 <mat-card class="settings-card">
 
-  <h5>Ethereum</h5>
-  <p>Indirizzo del nodo di ethereum</p>
-  <mat-form-field>
-    <input matInput placeholder="Indirizzo" [(ngModel)]="settings.ethereumNodeUrl"/>
-  </mat-form-field>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>query_builder</mat-icon>
+    </div>
+    <mat-card-title>Query settings</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="query-card-content" style="padding-top: 16px;">
+    <div>
+      <label style="display: block">Ethereum node url</label>
+      <mat-form-field style="width: 100%;">
+        <input matInput placeholder="Url" [(ngModel)]="settings.ethereumNodeUrl" />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <label style="font-weight: bold;">Query limits</label>
+      <p>Nodes range where query are executed</p>
+
+      <mat-form-field style="margin-right: 20px; width: 220px;">
+        <input matInput placeholder="Start block" [(ngModel)]="settings.queryStartBlock" type="number" />
+      </mat-form-field>
+
+      <mat-form-field style="margin-right: 20px; width: 220px;">
+        <input matInput placeholder="Number of blocks" [(ngModel)]="settings.numberOfBlocks" type="number" />
+      </mat-form-field>
+
+      <p>
+        WARNING: an high number of nodes can bring to a long query time
+      </p>
+    </div>
+
+  </mat-card-content>
 
 </mat-card>
 
+
 <mat-card class="settings-card">
 
-  <h5>Limiti delle query</h5>
-  <p>Il range di nodi entro cui vengono eseguite le query</p>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>play_arrow</mat-icon>
+    </div>
+    <mat-card-title>Analysis</mat-card-title>
+  </mat-card-header>
 
-  <mat-form-field style="margin-right: 20px;">
-    <input matInput placeholder="Starting blocl" [(ngModel)]="settings.queryStartBlock" type="number"/>
-  </mat-form-field>
-
-  <mat-form-field style="margin-right: 20px;">
-    <input matInput placeholder="Number of blocks" [(ngModel)]="settings.numberOfBlocks" type="number"/>
-  </mat-form-field>
-
-  <p>
-    ATTENZIONE: impostare un numero di nodi troppo alto potrebbe alzare di molto il tempo di esecuzione delle query!
-  </p>
+  <mat-card-content class="query-card-content" style="padding-top: 16px;">
+    <div>
+      <mat-form-field style="width: 100%;">
+        <input matInput placeholder="Server API endpoint" [(ngModel)]="settings.apiServerUrl"/>
+      </mat-form-field>
+    </div>
+    <div></div>
+  </mat-card-content>
 
 </mat-card>

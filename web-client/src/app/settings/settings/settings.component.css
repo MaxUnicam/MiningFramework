@@ -24,3 +24,18 @@
 .right-label {
   float: right;
 }
+
+
+
+.query-card-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.query-card-content div {
+  flex: 50%;
+}
+
+.query-card-content div:first-of-type {
+  margin-right: 32px;
+}

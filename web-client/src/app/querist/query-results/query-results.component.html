@@ -1,17 +1,17 @@
 <div class="content">
 
   <div class="progress-bar-container" *ngIf="isQuerying">
-    <p>Query in corso...</p>
+    <p>Query in progress...</p>
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
 
 
   <div *ngIf="noDataNorQuery" class="no-data-message">
-    Nessuna query eseguita e nessun risultato da mostrare
+    No query executed and no results to show
   </div>
 
   <div *ngIf="!noDataNorQuery">
-    <h3 style="margin: 16px;">Risultati <span class="text-small">[{{querist.queryResult.length}}]</span></h3>
+    <h3 style="margin: 16px;">Results <span class="text-small">[{{querist.queryResult.length}}]</span></h3>
     <table>
       <tr>
         <th *ngIf="showActionColumn"> Actions </th>
