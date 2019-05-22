@@ -5,6 +5,7 @@ import { FormControl, Validators, FormGroupDirective, NgForm } from '@angular/fo
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AnalysisResult } from 'src/app/shared/models/analysisResult';
 import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -33,9 +34,13 @@ export class HomeComponent implements OnInit {
   @ViewChild("stepper")
   stepper: MatStepper;
 
-  constructor(private serverStub: ServerStubService) { }
+  constructor(private serverStub: ServerStubService, private route: ActivatedRoute) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.ethereumContractHash = (params && params.hash) ? params.hash : '';
+    });
+  }
 
   get inductive(): DiscoveryAlgorithm {
     return DiscoveryAlgorithm.InductiveMiner;

@@ -8,8 +8,12 @@ import { AppComponent } from './app.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AnalysisModule } from './analysis/analysis.module';
-import { FooterModule } from './footer/footer.module';
+import { LayoutModule } from './layout/layout.module';
+
 import { AppRoutingModule } from './app-routing.module';
+
+import 'hammerjs';
+
 
 @NgModule({
   declarations: [
@@ -17,12 +21,12 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
 
+    AppRoutingModule,
     AnalysisModule,
-    FooterModule,
+    LayoutModule,
 
     MatToolbarModule
   ],

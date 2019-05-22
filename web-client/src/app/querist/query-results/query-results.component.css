@@ -1,0 +1,44 @@
+.result-item {
+  margin: 16px;
+}
+
+.content {
+  padding: 8px 16px;
+}
+
+.progress-bar-container {
+  margin: 20px 15px;
+}
+
+.text-small {
+  font-size: small;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: scroll;
+  display: block;
+}
+
+td, th {
+  padding: 16px;
+}
+
+tr {
+  border-bottom: 1px solid lightgray;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+}
+
+.no-data-message {
+  width: 50%;
+  margin: 100px auto;
+  text-align: center;
+  color: gray;
+  font-size: large;
+}

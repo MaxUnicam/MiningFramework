@@ -1,0 +1,28 @@
+<mat-card class="settings-card">
+
+  <h5>Ethereum</h5>
+  <p>Indirizzo del nodo di ethereum</p>
+  <mat-form-field>
+    <input matInput placeholder="Indirizzo" [(ngModel)]="settings.ethereumNodeUrl"/>
+  </mat-form-field>
+
+</mat-card>
+
+<mat-card class="settings-card">
+
+  <h5>Limiti delle query</h5>
+  <p>Il range di nodi entro cui vengono eseguite le query</p>
+
+  <mat-form-field style="margin-right: 20px;">
+    <input matInput placeholder="Starting blocl" [(ngModel)]="settings.queryStartBlock" type="number"/>
+  </mat-form-field>
+
+  <mat-form-field style="margin-right: 20px;">
+    <input matInput placeholder="Number of blocks" [(ngModel)]="settings.numberOfBlocks" type="number"/>
+  </mat-form-field>
+
+  <p>
+    ATTENZIONE: impostare un numero di nodi troppo alto potrebbe alzare di molto il tempo di esecuzione delle query!
+  </p>
+
+</mat-card>

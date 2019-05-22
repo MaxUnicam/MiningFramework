@@ -1,0 +1,37 @@
+<div class="content">
+
+  <div class="progress-bar-container" *ngIf="isQuerying">
+    <p>Query in corso...</p>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+
+
+  <div *ngIf="noDataNorQuery" class="no-data-message">
+    Nessuna query eseguita e nessun risultato da mostrare
+  </div>
+
+  <div *ngIf="!noDataNorQuery">
+    <h3 style="margin: 16px;">Risultati <span class="text-small">[{{querist.queryResult.length}}]</span></h3>
+    <table>
+      <tr>
+        <th *ngIf="showActionColumn"> Actions </th>
+        <th *ngFor="let prop of querist.query.desiredProperties"> {{prop}} </th>
+      </tr>
+      <tr *ngFor="let res of data" class="data-row">
+        <td *ngIf="showAnalyzeButton(res)">
+          <button mat-icon-button color="accent" (click)="analyzeContract(res)">
+            <mat-icon aria-label="Analyze contract">play_arrow</mat-icon>
+          </button>
+        </td>
+        <td *ngFor="let prop of querist.query.desiredProperties">
+          {{res[prop]}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<button mat-fab class="floating-button" (click)="downloadData()" [disabled]="querist.queryResult.length <= 0">
+  <mat-icon class="material-icons">save</mat-icon>
+</button>

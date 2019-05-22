@@ -1,0 +1,26 @@
+.settings-card {
+  margin: 15px 30px;
+}
+
+.save-button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+}
+
+.slider {
+  width: 500px;
+}
+
+.slider-values {
+  width: 500px;
+  height: 30px;;
+}
+
+.threshold-label {
+  font-size: small;
+}
+
+.right-label {
+  float: right;
+}
