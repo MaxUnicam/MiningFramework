@@ -5,6 +5,8 @@ import { FormControl, Validators, FormGroupDirective, NgForm } from '@angular/fo
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AnalysisResult } from 'src/app/shared/models/analysisResult';
 import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-home',
@@ -33,9 +35,13 @@ export class HomeComponent implements OnInit {
   @ViewChild("stepper")
   stepper: MatStepper;
 
-  constructor(private serverStub: ServerStubService) { }
+  constructor(private serverStub: ServerStubService, private route: ActivatedRoute, private snackBar: MatSnackBar) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.ethereumContractHash = (params && params.hash) ? params.hash : '';
+    });
+  }
 
   get inductive(): DiscoveryAlgorithm {
     return DiscoveryAlgorithm.InductiveMiner;
@@ -53,6 +59,7 @@ export class HomeComponent implements OnInit {
       this.showResults = true;
     }, error => {
       this.isAnalyzing = false;
+      this.showErrorMessage(error);
       console.log(error);
     });
   }
@@ -61,6 +68,13 @@ export class HomeComponent implements OnInit {
     this.showResults = false;
     this.results = null;
     this.stepper.reset();
+  }
+
+  private showErrorMessage(error) {
+    this.snackBar.open("There was an error. Retry later", null, {
+      panelClass: 'snack-bar-color',
+      duration: 3000
+    });
   }
 
 }

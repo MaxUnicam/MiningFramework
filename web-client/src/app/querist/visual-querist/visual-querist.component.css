@@ -1,0 +1,46 @@
+.visual-querist-container {
+  width: calc(100% - 32px);
+  padding: 16px;
+  display: flex;
+  overflow: hidden;
+  justify-content: space-evenly;
+}
+
+.visual-querist-container mat-card {
+  /* margin: 10px 15px; */
+  display: inline-block;
+  vertical-align: top;
+}
+
+.info-card, .projection-card {
+  flex-grow: 1;
+}
+
+.selection-card {
+  flex-grow: 1 1 auto;
+  margin: 0 16px;
+}
+
+.field {
+  width: 150px;
+  margin: 5px;
+}
+
+.operator-field {
+  width: 100px;
+}
+
+.logical-op-field {
+  width: 60px;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+}
+
+.radio-button-item {
+  display: block;
+  margin-bottom: 16px;
+}

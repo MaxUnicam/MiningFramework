@@ -1,0 +1,21 @@
+<mat-sidenav-container class="full-body">
+
+  <mat-sidenav #sidenav mode="over" class="side-menu">
+
+    <app-side-menu (navigatedFromMenu)="handleNavigation()"></app-side-menu>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+      <button mat-button (click)="goToMining()"><h1>Analysis</h1></button>
+      <button mat-button (click)="goToQuerist()"><h1>Query</h1></button>
+    </mat-toolbar>
+
+    <ng-content></ng-content>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

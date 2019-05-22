@@ -42,3 +42,8 @@
 .mat-progress-spinner circle {
     stroke: #fff;
   }
+
+::ng-deep .snack-bar-color {
+    background-color: red;
+    color: white;
+}

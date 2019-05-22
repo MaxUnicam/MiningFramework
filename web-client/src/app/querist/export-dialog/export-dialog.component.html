@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Esporta risultati</h2>
+
+<mat-dialog-content>
+  In che formato vuoi esportare i risultati della query?
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="exportCsv()">Esporta .csv</button>
+  <button mat-button (click)="exportJson()">Esporta .json</button>
+  <button mat-button mat-dialog-close>Annulla</button>
+</mat-dialog-actions>
