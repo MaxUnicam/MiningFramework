@@ -49,10 +49,15 @@
   <mat-card-content class="query-card-content" style="padding-top: 16px;">
     <div>
       <mat-form-field style="width: 100%;">
-        <input matInput placeholder="Server API endpoint" [(ngModel)]="settings.apiServerUrl"/>
+        <input matInput placeholder="Server API endpoint" [(ngModel)]="settings.apiServerUrl" />
       </mat-form-field>
     </div>
     <div></div>
   </mat-card-content>
 
 </mat-card>
+
+
+<button mat-fab color="accent" class="save-button" (click)="save()">
+  <mat-icon>save</mat-icon>
+</button>

@@ -1,21 +1,35 @@
 import { Injectable } from '@angular/core';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { ApplicationSettings } from './models/application-settings';
 
 @Injectable()
 export class InMemorySettingsService {
 
-  public ethereumNodeUrl: string;
+  private appSettings: ApplicationSettings = null;
 
-  public queryStartBlock: number;
-
-  public numberOfBlocks: number;
-
-  public apiServerUrl: string;
+  private settingsStream: BehaviorSubject<ApplicationSettings>;
 
   constructor() {
-    this.ethereumNodeUrl = 'https://mainnet.infura.io/v3/419c7f687f3b41f0bc9e0e647b9ab911';
-    this.apiServerUrl = 'http://localhost:8080';
-    this.queryStartBlock = 7806279;
-    this.numberOfBlocks = 20;
+    this.appSettings = {
+      ethereumNodeUrl: 'https://mainnet.infura.io/v3/419c7f687f3b41f0bc9e0e647b9ab911',
+      apiServerUrl: 'http://localhost:8080',
+      queryStartBlock: 7806279,
+      numberOfBlocks: 20
+    };
+    this.settingsStream = new BehaviorSubject<ApplicationSettings>(this.appSettings);
+  }
+
+  getSettings(): Observable<ApplicationSettings> {
+    return of(this.appSettings);
+  }
+
+  getSettingsStream(): Observable<ApplicationSettings> {
+    return this.settingsStream;
+  }
+
+  saveNewSettings(settings: ApplicationSettings) {
+    this.appSettings = settings;
+    this.settingsStream.next(settings);
   }
 
 }

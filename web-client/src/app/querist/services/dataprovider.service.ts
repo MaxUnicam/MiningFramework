@@ -20,13 +20,12 @@ export class DataProviderService {
 
   private web3: Web3;
 
-  constructor(settings: InMemorySettingsService) {
-    this.web3 = new Web3(new Web3.providers.HttpProvider(settings.ethereumNodeUrl));
-    if (this.web3) {
-      this.web3.eth.getBlockNumber().then(number => {
-        console.log("Last block " + number)
-      });
-    }
+  constructor(settingsService: InMemorySettingsService) {
+    settingsService.getSettings().subscribe(settings => {
+      this.web3 = new Web3(new Web3.providers.HttpProvider(settings.ethereumNodeUrl));
+      if (this.web3)
+        this.web3.eth.getBlockNumber().then(number => console.log("Last block " + number));
+    })
   }
 
   getBlockNumber(): Observable<number> {
@@ -70,10 +69,10 @@ export class DataProviderService {
     return Observable.create(async (observer) => {
       for (let i = start; i < end; i++) {
         const block = await this.getBlock(i).toPromise();
-        for (let j = 0; j < block.transactions.length; j ++) {
-            const hash = block.transactions[j];
-            const item = await this.getTransaction(hash).toPromise();
-            observer.next(item);
+        for (let j = 0; j < block.transactions.length; j++) {
+          const hash = block.transactions[j];
+          const item = await this.getTransaction(hash).toPromise();
+          observer.next(item);
         }
       }
 

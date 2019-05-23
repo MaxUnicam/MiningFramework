@@ -6,11 +6,13 @@ import { SettingsComponent } from './settings/settings.component';
 
 import { InMemorySettingsService } from '../settings/memorysettings.service';
 
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 import {
   MatInputModule,
-  MatCardModule
+  MatCardModule,
+  MatButtonModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -19,7 +21,9 @@ import {
     FormsModule,
     MatCardModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [ InMemorySettingsService ],
   declarations: [ SettingsComponent ],
