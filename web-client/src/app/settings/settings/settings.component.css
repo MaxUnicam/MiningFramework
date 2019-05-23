@@ -39,3 +39,16 @@
 .query-card-content div:first-of-type {
   margin-right: 32px;
 }
+
+
+.save-button {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 100;
+}
+
+::ng-deep .snack-bar-color {
+  background-color: green;
+  color: white;
+}

@@ -11,6 +11,7 @@ import { DataSelectorService } from './dataselector.service';
 import { DataProviderService } from './dataprovider.service';
 import { InMemorySettingsService } from 'src/app/settings/memorysettings.service';
 import { Block } from '../models/block';
+import { ApplicationSettings } from 'src/app/settings/models/application-settings';
 
 @Injectable()
 export class CamQueristService {
@@ -18,10 +19,14 @@ export class CamQueristService {
   public query: Query;
   public queryResult: any[] = [];
 
-  constructor(private projector: DataProjectorService,
-    private selector: DataSelectorService,
-    private provider: DataProviderService,
-    private settings: InMemorySettingsService) { }
+  private settings: ApplicationSettings;
+
+  constructor(private projector: DataProjectorService, private selector: DataSelectorService, 
+    private provider: DataProviderService, settingsService: InMemorySettingsService) {
+    settingsService.getSettings().subscribe(settings => {
+      this.settings = settings;
+    })
+  }
 
   executeQuery(query?: Query): Observable<any> {
     return new Observable((observer) => {

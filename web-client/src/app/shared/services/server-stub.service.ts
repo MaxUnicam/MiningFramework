@@ -12,8 +12,10 @@ export class ServerStubService {
 
   private serverEndpoint: string = null;
 
-  constructor(private settings: InMemorySettingsService, private httpClient: HttpClient) {
-    this.serverEndpoint = settings.apiServerUrl;
+  constructor(settingsService: InMemorySettingsService, private httpClient: HttpClient) {
+    settingsService.getSettingsStream().subscribe(settings => {
+      this.serverEndpoint = settings.apiServerUrl;
+    })
   }
 
   public analyzeContract(contract: string, algorithm: DiscoveryAlgorithm, returnXes = false, returnPnml = false): Observable<AnalysisResult> {
