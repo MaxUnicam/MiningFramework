@@ -38,6 +38,13 @@ public class ProcessMiningController {
 
 
     @CrossOrigin
+    @RequestMapping("api/v1/ping")
+    public ResponseEntity ping() throws Exception {
+        return ResponseEntity.ok("pong");
+    }
+
+
+    @CrossOrigin
     @RequestMapping("api/v1/processmining/analyze")
     public ResponseEntity mine(
             @RequestParam(value="contract") String contract,
