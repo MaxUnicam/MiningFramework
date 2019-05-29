@@ -3,7 +3,6 @@ package com.miningframework.common.settings;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.net.URL;
 
 public class ApplicationSettings {
 
@@ -38,13 +37,13 @@ public class ApplicationSettings {
     }
 
 
-    public void initialize() {
+    public void initialize(String filePath) {
         if (initialized) {
             return;
         }
 
         initialized = true;
-        String fileContent = new String(getFileData());
+        String fileContent = new String(getFileData(filePath));
         Gson gson = new Gson();
         ApplicationSettings temporary = gson.fromJson(fileContent, ApplicationSettings.class);
 
@@ -57,18 +56,20 @@ public class ApplicationSettings {
         this.timeoutMilliseconds = temporary.timeoutMilliseconds;
     }
 
-    private byte[] getFileData() {
+    private byte[] getFileData(String filePath) {
         try {
-            URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
-            String path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
-            File file = new File(path + "/appsettings.json");
+            File file = new File(filePath + "/appsettings.json");
 
             // Loaded from properties during development and from the same directory of the jar in production
             InputStream inputStream;
-            if (file.exists())
+            if (file.exists()) {
+                System.out.println("Settings loaded from: " + filePath);
                 inputStream = new FileInputStream(file);
-            else
+            }
+            else {
+                System.out.println("Settings loaded from resources");
                 inputStream = this.getClass().getResourceAsStream("/settings/appsettings.json");
+            }
 
             if (inputStream != null) {
                 byte[] data = toByteArray(inputStream);

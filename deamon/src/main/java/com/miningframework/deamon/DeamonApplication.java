@@ -10,6 +10,7 @@ import com.miningframework.common.settings.ApplicationSettings;
 import com.miningframework.common.utils.DiscoveryAlgorithm;
 import org.deckfour.xes.model.XLog;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -18,10 +19,11 @@ import java.util.concurrent.TimeoutException;
 public class DeamonApplication {
 
     public static void main(String [] args) {
-
         System.out.println("Mining framework deamon started");
+        URL url = DeamonApplication.class.getProtectionDomain().getCodeSource().getLocation();
+        String path = url.getPath().substring(0, url.getPath().lastIndexOf("/"));
         ApplicationSettings settings = ApplicationSettings.instance();
-        settings.initialize();
+        settings.initialize(path);
         System.out.println("Application settings initialized");
         IResultHandler resultHandler = new ResultsHandler();
         ProMWrapper prom = new ProMWrapper();
