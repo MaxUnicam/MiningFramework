@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { ApplicationSettings } from './models/application-settings';
+import { ConfigurationService } from '../shared/services/configuration.service';
 
 @Injectable()
 export class InMemorySettingsService {
@@ -9,10 +10,10 @@ export class InMemorySettingsService {
 
   private settingsStream: BehaviorSubject<ApplicationSettings>;
 
-  constructor() {
+  constructor(config: ConfigurationService) {
     this.appSettings = {
-      ethereumNodeUrl: 'https://mainnet.infura.io/v3/419c7f687f3b41f0bc9e0e647b9ab911',
-      apiServerUrl: 'http://localhost:8080',
+      ethereumNodeUrl: config.ethereumEndpoint,
+      apiServerUrl: config.apiEndpoint,
       queryStartBlock: 7806279,
       numberOfBlocks: 20
     };
