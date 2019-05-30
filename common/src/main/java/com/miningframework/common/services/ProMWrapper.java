@@ -11,6 +11,7 @@ import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.dataawarecnetminer.converter.CausalNetToPetrinet;
+import org.processmining.dataawarecnetminer.extension.dependencies.DependencyHeuristicConfig;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalGraphMiner;
 import org.processmining.dataawarecnetminer.mining.classic.HeuristicsCausalNetMiner;
 import org.processmining.dataawarecnetminer.model.DependencyAwareCausalGraph;
@@ -140,13 +141,19 @@ public class ProMWrapper {
     }
 
     private PetriNet mineUsingInductiveMiner(XLog log) {
-        Object[] net = IM.minePetriNet(new FakeProMContext(), log, new MiningParametersIMf());
+        MiningParametersIMf params = new MiningParametersIMf();
+        params.setNoiseThreshold(0);
+        Object[] net = IM.minePetriNet(new FakeProMContext(), log, params);
         PetrinetImpl a = (PetrinetImpl) net[0];
         return new PetriNet(net);
     }
 
     private PetriNet mineUsingHeuristicMiner(XLog log) throws Exception, NonExistingVariableException {
         HeuristicsCausalGraphMiner gminer = new HeuristicsCausalGraphMiner(log, new XEventNameClassifier());
+        DependencyHeuristicConfig config = new DependencyHeuristicConfig();
+        config.setAllTasksConnected(true);
+        config.setDependencyThreshold(0.9);
+        gminer.setHeuristicsConfig(config);
         DependencyAwareCausalGraph w = gminer.mineCausalGraph();
         HeuristicsCausalNetMiner miner = new HeuristicsCausalNetMiner(log, new XEventNameClassifier());
         FrequencyAwareCausalNet net = miner.mineCausalNet(w);
